@@ -10,21 +10,24 @@ def main():
                {'Course code': 'EC381', 'Days': 'TT', 'Slots': '34', 'Quotas': 1, 'Participants': 0},
                {'Course code': 'EC411', 'Days': 'WW', 'Slots': '45', 'Quotas': 1, 'Participants': 0},
                {'Course code': 'EC350', 'Days': 'TT', 'Slots': '34', 'Quotas': 3, 'Participants': 0}]
-    # Add students
-    students = [addStudent("Ahmet", 2115300000, '1234', 3.55, 7, 'Economics'),
-                addStudent('Buse', 2015300001, '4321', 2.72, 5, 'Economics'),
-                addStudent('Can', 2015300002, '3412', 3.14, 6, 'Management'),
-                addStudent('Deniz', 2015300003, '1122', 2.56, 6, 'Political Science'),
-                addStudent('Emmre', 2015300004, '1313', 3.70, 8, 'Economics')]
+    # Student list and list for their courses
+    students = []
     studentCourses = []
-    for x in range(len(students)):  # Add unique empty lists
-        studentCourses.append([])
+    # Add students
+    addStudent(students, studentCourses, "Ahmet", 2115300000, '1234', 3.55, 7, 'Economics'),
+    addStudent(students, studentCourses, 'Buse', 2015300001, '4321', 2.72, 5, 'Economics'),
+    addStudent(students, studentCourses, 'Can', 2015300002, '3412', 3.14, 6, 'Management'),
+    addStudent(students, studentCourses, 'Deniz', 2015300003, '1122', 2.56, 6, 'Political Science'),
+    addStudent(students, studentCourses, 'Emmre', 2015300004, '1313', 3.70, 8, 'Economics')
+    # Run program
     runProgram(students, courses, studentCourses)
 
 
-def addStudent(name, studentID, password, gpa, semester, department):
-    return {'Name': name, 'ID': int(studentID), 'Password': str(password),
-            'GPA': float(gpa), 'Semester': int(semester), 'Department': department}
+# This function makes it easy to create a signup function or an admin account to add more students
+def addStudent(studentList, studentCourses, name, studentID, password, gpa, semester, department):
+    studentList.append({'Name': name, 'ID': int(studentID), 'Password': str(password),
+                        'GPA': float(gpa), 'Semester': int(semester), 'Department': department})
+    studentCourses.append([])  # Add spot in courses lis for student
 
 
 def runProgram(students, courses, studentCourses):
@@ -267,7 +270,7 @@ def printDayInfo(courses, studentCourses, day):
     buildString = '\n\n' + day[1] + ':'
     if len(listOfThisDaysCourses) > 0:
         for i in range(len(listOfThisDaysCourses)):
-            buildString += ' ' + listOfThisDaysCourses[i] + '(' +\
+            buildString += ' ' + listOfThisDaysCourses[i] + '(' + \
                            returnPeriodsForDay(courses, listOfThisDaysCourses[i]) + ')'
             if i < len(listOfThisDaysCourses) - 1:
                 buildString += ','
@@ -312,7 +315,7 @@ def sortCoursesByPeriod(coursesOfTheDay, slotsOfTheDay):
         for j in range(len(coursesOfTheDay)):
             if int(list(slotsOfTheDay[j])[0]) < smallest and j not in indexes:
                 smallest = int(list(slotsOfTheDay[j])[0])  # Only need to check for first period, non of them overlap
-                loopIndex = j                              # unless they start at the same period
+                loopIndex = j  # unless they start at the same period
         indexes.append(loopIndex)
         sortedCourses.append(coursesOfTheDay[loopIndex])
     return sortedCourses
